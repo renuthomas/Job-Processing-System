@@ -84,7 +84,7 @@ Reaper (every 30s) → Recovers stale jobs
 
    ```sql
    CREATE TABLE job_details (
-       id SERIAL PRIMARY KEY,
+       id BIGSERIAL PRIMARY KEY,
        type VARCHAR(100) NOT NULL,
        payload JSONB NOT NULL,
        status VARCHAR(20) DEFAULT 'pending',
@@ -97,8 +97,8 @@ Reaper (every 30s) → Recovers stale jobs
    );
 
    CREATE TABLE dlq (
-       id SERIAL PRIMARY KEY,
-       job_id INTEGER,
+       id BIGSERIAL PRIMARY KEY,
+       job_id BIGINT NOT NULL REFERENCES job_details(id),
        type VARCHAR(100),
        payload JSONB,
        attempts INTEGER,
