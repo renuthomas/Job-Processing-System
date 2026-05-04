@@ -4,10 +4,11 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "set NODE_ENV=test&& node --experimental-vm-modules node_modules/jest/bin/jest.js",
     "start": "node app.js",
     "worker": "node worker.js",
-    "reaper": "node reaper.js"
+    "reaper": "node reaper.js",
+    "scheduler": "node scheduler.js"
   },
   "keywords": [],
   "author": "",
@@ -18,5 +19,8 @@
     "express": "^5.2.1",
     "pg": "^8.20.0",
     "redis": "^5.12.1"
+  },
+  "devDependencies": {
+    "jest": "^30.3.0"
   }
 }
