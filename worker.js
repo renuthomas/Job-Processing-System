@@ -33,7 +33,13 @@ const worker=async()=>{
                 await client.query("UPDATE job_details SET status='failed' WHERE id=$1", [jobId]);
                 await client.query("INSERT INTO dlq (job_id, type, payload, attempts, error) VALUES ($1,$2,$3,$4,$5)",[jobId, jobResult.type, jobResult.payload, attempts, error.message]);
             } else {
-                await redisClient.lPush("queue:pending", jobId.toString());
+                // Instead of immediate lPush, give the system 30 seconds to breathe before retrying
+                const retryAt=Date.now()+30000;
+                await redisClient.zAdd("queue:delayed",{
+                    score:retryAt,
+                    value:jobId.toString()
+                })
+                console.log(`Job ${jobId} failed. Retrying in 30s...`);
             }
         } finally {
             clearInterval(heartbeat);
